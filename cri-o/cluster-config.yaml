@@ -1,0 +1,15 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+nodes:
+- role: control-plane
+  image: kindnode/cri-o:1.25.2
+  extraMounts:
+  - hostPath: cri-o
+    containerPath: /host
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      criSocket: unix:///run/crio/crio.sock
+      kubeletExtraArgs:
+        cgroup-driver: cgroupfs

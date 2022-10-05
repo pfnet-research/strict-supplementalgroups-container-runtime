@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bypass-supplementalgroups-pod
+spec:
+  # please assume the securityContext fields are restricted by PSP
+  securityContext:
+    runAsUser: 1000 # alice's uid
+    runAsGroup: 1000 # alice's gid
+    supplementalGroups: [60000]
+  restartPolicy: Never
+  containers:
+  - image: bypass-supplementalgroups-image
+    name: main
+    command: ["bash", "-c", "id; true"]
+    imagePullPolicy: Never
