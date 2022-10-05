@@ -77,3 +77,12 @@ define kind-load-image
 		docker exec $${n} skopeo copy docker-archive:/host/image/${1}.tar containers-storage:docker.io/${1}:latest; \
 	done
 endef
+
+.PHONY: ci-setup
+ci-setup:
+	cd $(shell go env GOPATH) && \
+	go install golang.org/x/tools/cmd/goimports@latest && \
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.49.0 && \
+	curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.16.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && sudo mv ./kustomize /usr/local/bin
+	curl -LO "https://storage.googleapis.com/kubernetes-release/release/$$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ./kubectl && sudo mv kubectl /usr/local/bin
