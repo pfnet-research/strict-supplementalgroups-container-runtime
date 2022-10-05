@@ -15,5 +15,5 @@
 # vendor/
 
 .vscode/
-bin/
-e2e/kind/.work
+dist/
+e2e/kind/.work/

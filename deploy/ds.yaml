@@ -19,7 +19,7 @@ spec:
       hostPID: true
       containers:
       - name: ctr
-        image: strict-supplementalgroups-container-runtime-install
+        image: ghcr.io/pfnet-research/strict-supplementalgroups-container-runtime
         imagePullPolicy: Never
         volumeMounts:
         - name: config

@@ -5,9 +5,10 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 	"time"
 
@@ -48,7 +49,7 @@ func NewKubeletClient(
 
 	var caCert []byte
 	if restConfig.TLSClientConfig.CAFile != "" {
-		caCert, err = ioutil.ReadFile(restConfig.TLSClientConfig.CAFile)
+		caCert, err = os.ReadFile(restConfig.TLSClientConfig.CAFile)
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +98,7 @@ func (c *Client) Pod(namespace, name string) (*corev1.Pod, error) {
 		return nil, fmt.Errorf("Failed to run HTTP request: %v", err)
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read HTTP response body: %v", err)
 	}

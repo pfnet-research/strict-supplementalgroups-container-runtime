@@ -3,7 +3,7 @@ package bundle
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
@@ -14,7 +14,7 @@ func (b *Bundle) SaveSpec() error {
 	}
 
 	specPath := filepath.Join(b.Dir, specFileName)
-	err = ioutil.WriteFile(specPath, specRaw, 0644)
+	err = os.WriteFile(specPath, specRaw, 0644)
 	if err != nil {
 		return err
 	}

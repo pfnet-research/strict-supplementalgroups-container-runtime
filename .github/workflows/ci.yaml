@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ "**" ]
+    paths-ignore: [ "**.md" ]
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore: [ "**.md" ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ~1.17
+    - name: Check out
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Setup Dev Tools
+      run: make ci-setup
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Lint
+      run : make lint
+    - name: Build
+      run: make
+    - name: Test
+      run: make test
+    - name: Validate .goreleaser.yml
+      uses: goreleaser/goreleaser-action@v3
+      with:
+        version: latest
+        args: release --snapshot --skip-publish --rm-dist --debug
+
+  e2e:
+    name: E2E Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ~1.17
+    - name: Check out
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Setup Dev Tools
+      run: make ci-setup
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Create e2e workdir and make it writable
+      run: |
+        mkdir -p e2e/kind/.work/image
+        chmod -R 777 e2e/kind/.work
+    - name: E2E test
+      run: make e2e

@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -21,7 +20,7 @@ func LoadConfig() (*Config, error) {
 
 	// load if config file exists
 	if _, err := os.Stat(configPath); err == nil {
-		configBytes, err := ioutil.ReadFile(configPath)
+		configBytes, err := os.ReadFile(configPath)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to read config file %s: %v", configPath, err)
 		}

@@ -181,6 +181,14 @@ See [`deploy`](deploy) directory and customize this to your cluster.
 
 ## Development
 
+### pre-requisites
+
+- kubectl
+- kustomize
+- kind
+- goimports
+- golangci-lint
+
 ### build <!-- omit in toc -->
 
 ```shell
@@ -200,6 +208,14 @@ e2e test runs on kind cluster and test this runtime works as expected both on co
 ```
 make e2e
 # make e2e-clean
+```
+
+## Release
+
+This tag the commit and push to origin.  Release pipeline will be run in Github Actions.
+
+```shell
+make RELEASE=true RELEASE_TAG=vX.Y.Z
 ```
 
 ## License
