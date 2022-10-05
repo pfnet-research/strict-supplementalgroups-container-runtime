@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/static-debian11:latest
+FROM ubuntu:22.04
 COPY strict-supplementalgroups-container-runtime \
     /opt/strict-supplementalgroups-container-runtime/bin/
 COPY strict-supplementalgroups-install \
