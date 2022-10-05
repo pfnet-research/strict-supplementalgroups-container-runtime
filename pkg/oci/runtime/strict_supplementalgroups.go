@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -81,7 +80,11 @@ func (r *strictSupplementalGroupsRuntime) Exec(args []string) error {
 	if err != nil {
 		return fmt.Errorf("Failed to create container Logger: %w", err)
 	}
-	defer closeContainerLogFile()
+	defer func() {
+		if err := closeContainerLogFile(); err != nil {
+			zlog.Warn().Err(err).Msg("Failed to close container log file. Ignored.")
+		}
+	}()
 
 	// this logger outputs both runtime log(specified in config) and container log(specified in runtime command)
 	logger := zerolog.Ctx(r.runtimeLogCtx).Output(
@@ -156,7 +159,7 @@ func (r *strictSupplementalGroupsRuntime) enforceSupplementalGroupsOnExecute(log
 	}
 
 	// read process spec
-	processRaw, err := ioutil.ReadFile(crArgs.Options.Process)
+	processRaw, err := os.ReadFile(crArgs.Options.Process)
 	if err != nil {
 		return fmt.Errorf("Failed to read process file %s: %v", crArgs.Options.Process, err)
 	}
@@ -178,7 +181,7 @@ func (r *strictSupplementalGroupsRuntime) enforceSupplementalGroupsOnExecute(log
 		if err != nil {
 			return fmt.Errorf("Failed to marshal process spec: %w", err)
 		}
-		if err := ioutil.WriteFile(crArgs.Options.Process, jsonRaw, 0644); err != nil {
+		if err := os.WriteFile(crArgs.Options.Process, jsonRaw, 0644); err != nil {
 			return fmt.Errorf("Failed to update process spec: %w", err)
 		}
 		logger.Info().Msg("SupplementalGroups enforced successfully")

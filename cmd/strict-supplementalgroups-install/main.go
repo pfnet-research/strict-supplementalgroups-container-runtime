@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -61,14 +60,14 @@ func main() {
 	fromFile := *configPath
 	toDir = filepath.Join(*hostPrefix, "etc", "strict-supplementalgroups-container-runtime")
 	toFile := filepath.Join(toDir, "config.toml")
-	configData, err := ioutil.ReadFile(fromFile)
+	configData, err := os.ReadFile(fromFile)
 	if err != nil {
 		zlog.Fatal().Err(err).Str("From", fromFile).Str("To", toFile).Msg("Failed to copy config file")
 	}
 	if err := os.MkdirAll(toDir, 0755); err != nil {
 		zlog.Fatal().Err(err).Str("From", fromFile).Str("To", toFile).Msg("Failed to copy config file")
 	}
-	err = ioutil.WriteFile(toFile, configData, 0644)
+	err = os.WriteFile(toFile, configData, 0644)
 	if err != nil {
 		zlog.Fatal().Err(err).Str("From", fromFile).Str("To", toFile).Msg("Failed to copy config file")
 	}
@@ -77,7 +76,7 @@ func main() {
 	// generate patch
 	var criConfigPatch string
 	if *criConfigPatchPath != "" {
-		criConfigPatchRaw, err := ioutil.ReadFile(*criConfigPatchPath)
+		criConfigPatchRaw, err := os.ReadFile(*criConfigPatchPath)
 		if err != nil {
 			zlog.Fatal().Err(err).Msg("Failed to read cri-config-patch")
 		}
@@ -121,7 +120,7 @@ func main() {
 func updateCriConfig(
 	criName, criConfigPath, criConfigPatch string,
 ) (bool, error) {
-	configRaw, err := ioutil.ReadFile(criConfigPath)
+	configRaw, err := os.ReadFile(criConfigPath)
 	if err != nil {
 		return false, fmt.Errorf("Failed to open %s: %w", criConfigPath, err)
 	}
@@ -132,7 +131,7 @@ func updateCriConfig(
 	if string(configRaw) == patched {
 		return false, nil
 	}
-	if err := ioutil.WriteFile(criConfigPath, []byte(patched), 0644); err != nil {
+	if err := os.WriteFile(criConfigPath, []byte(patched), 0644); err != nil {
 		return false, err
 	}
 
