@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: strict-supplementalgroups-install-containerd
+  namespace: system
+spec:
+  selector:
+    matchLabels:
+      app: strict-supplementalgroups-install-containerd
+  template:
+    metadata:
+      labels:
+        app: strict-supplementalgroups-install-containerd
+    spec:
+      nodeSelector:
+        cri: containerd
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      hostPID: true
+      priorityClassName: system-node-critical
+      containers:
+      - name: ctr
+        image: strict-supplementalgroups-install
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: config
+          mountPath: /etc/strict-supplementalgroups-container-runtime
+        - name: host
+          mountPath: /host
+      volumes:
+      - name: config
+        configMap:
+          name: config-containerd
+      - name: host
+        hostPath:
+          path: /
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: strict-supplementalgroups-install-crio
+  namespace: system
+spec:
+  selector:
+    matchLabels:
+      app: strict-supplementalgroups-install-crio
+  template:
+    metadata:
+      labels:
+        app: strict-supplementalgroups-install-crio
+    spec:
+      nodeSelector:
+        cri: cri-o
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      hostPID: true
+      priorityClassName: system-node-critical
+      containers:
+      - name: ctr
+        image: strict-supplementalgroups-install
+        imagePullPolicy: Never
+        args:
+        - --cri=crio
+        - --cri-config-patch=/etc/strict-supplementalgroups-container-runtime/patch.toml
+        volumeMounts:
+        - name: config
+          mountPath: /etc/strict-supplementalgroups-container-runtime
+        - name: host
+          mountPath: /host
+      volumes:
+      - name: config
+        configMap:
+          name: config-crio
+      - name: host
+        hostPath:
+          path: /

@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: get-node-proxy
+rules:
+  - apiGroups:
+    - ""
+    resources:
+    - "nodes/proxy"
+    verbs:
+    - "get"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nodes-get-node-proxy
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: get-node-proxy
+subjects:
+- kind: Group
+  name: system:nodes

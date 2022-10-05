@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: strict-supplementalgroups-container-runtime-install
+  namespace: system
+spec:
+  selector:
+    matchLabels:
+      app: strict-supplementalgroups-container-runtime-install
+  template:
+    metadata:
+      labels:
+        app: strict-supplementalgroups-container-runtime-install
+    spec:
+      priorityClassName: system-node-critical
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      hostPID: true
+      containers:
+      - name: ctr
+        image: strict-supplementalgroups-container-runtime-install
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: config
+          mountPath: /etc/strict-supplementalgroups-container-runtime
+        - name: host
+          mountPath: /host
+      volumes:
+      - name: config
+        configMap:
+          name: config-containerd
+      - name: host
+        hostPath:
+          path: /

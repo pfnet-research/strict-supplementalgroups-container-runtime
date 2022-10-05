@@ -1,0 +1,5 @@
+[crio.runtime]
+default_runtime="runc"
+
+[crio.runtime.runtimes.strict-supplementalgroups]
+runtime_path = "/opt/strict-supplementalgroups-container-runtime/bin/strict-supplementalgroups-container-runtime"

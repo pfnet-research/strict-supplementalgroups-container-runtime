@@ -1,0 +1,12 @@
+runtime = "runc"
+kubeconfig = "/etc/kubernetes/kubelet.conf"
+
+# cri-o uses different annotation keys in spec.json
+pod-name-annotation = "io.kubernetes.pod.name"
+pod-namespace-annotation = "io.kubernetes.pod.namespace"
+container-name-annotation = "io.kubernetes.container.name"
+container-type-annotation = "io.kubernetes.cri-o.ContainerType"
+
+[logging]
+log-level = "info"
+log-file = "/var/log/strict-supplementalgroups-container-runtime.log"

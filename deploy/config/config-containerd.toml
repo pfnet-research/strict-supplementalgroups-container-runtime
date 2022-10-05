@@ -1,0 +1,6 @@
+runtime = "runc"
+kubeconfig = "/etc/kubernetes/kubelet.conf"
+
+[logging]
+log-level = "info"
+log-file = "/var/log/strict-supplementalgroups-container-runtime.log"

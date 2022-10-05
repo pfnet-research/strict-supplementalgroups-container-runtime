@@ -1,0 +1,41 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: strict-supplementalgroups-system
+
+resources:
+- ds.yaml
+- namespace.yaml
+- rbac.yaml
+- runtime.yaml
+
+configMapGenerator:
+- name: config-containerd
+  files:
+  - config.toml=config/config-containerd.toml
+
+# # [CRI-O] If you use cri-o, just uncomment belows
+# - name: config-crio
+#   files:
+#   - config.toml=config/config-crio.toml
+#   - patch.toml=config/crio-patch.toml
+# 
+# patchesStrategicMerge:
+# - |-
+#   apiVersion: apps/v1
+#   kind: DaemonSet
+#   metadata:
+#     name: strict-supplementalgroups-container-runtime-install
+#     namespace: system
+#   spec:
+#     template:
+#       spec:
+#         containers:
+#         - name: ctr
+#           args:
+#           - --cri=crio
+#           - --cri-config-patch=/etc/strict-supplementalgroups-container-runtime/patch.toml
+#         volumes:
+#         - name: config
+#           configMap:
+#             name: config-crio
