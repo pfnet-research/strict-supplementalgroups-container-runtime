@@ -1,6 +1,8 @@
 package runtime
 
 import (
+	"sort"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -45,6 +47,12 @@ var _ = Describe("enforceSupplementalGroupsOnProcessSpec", func() {
 
 		enforced := r.enforceSupplementalGroupsOnProcessSpec(zlog.Logger, &processSpec, &pod)
 		Expect(enforced).To(Equal(expectEnforced))
+		sort.Slice(processSpec.User.AdditionalGids, func(i, j int) bool {
+			return processSpec.User.AdditionalGids[i] < processSpec.User.AdditionalGids[j]
+		})
+		sort.Slice(expectedAdditionalGids, func(i, j int) bool {
+			return expectedAdditionalGids[i] < expectedAdditionalGids[j]
+		})
 		Expect(processSpec.User.AdditionalGids).To(BeEquivalentTo(expectedAdditionalGids))
 	}
 
