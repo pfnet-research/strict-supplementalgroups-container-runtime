@@ -181,6 +181,14 @@ See [`deploy`](deploy) directory and customize this to your cluster.
 
 ## Development
 
+### pre-requisites
+
+- kubectl
+- kustomize
+- kind
+- goimports
+- golangci-lint
+
 ### build <!-- omit in toc -->
 
 ```shell

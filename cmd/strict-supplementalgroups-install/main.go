@@ -20,6 +20,11 @@ import (
 	"github.com/pfnet-research/strict-supplementalgroups-container-runtime/pkg/patch"
 )
 
+var (
+	// injected in build time
+	Version = ""
+)
+
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
@@ -42,9 +47,11 @@ func main() {
 		case "crio":
 			*criConfigPath = (*hostPrefix) + "/etc/crio/crio.conf"
 		default:
-			zlog.Fatal().Str("cri", *cri).Msg("The CRI is not supported. Supported CRI is containerd or cri-o")
+			zlog.Fatal().Str("version", Version).Str("cri", *cri).Msg("The CRI is not supported. Supported CRI is containerd or cri-o")
 		}
 	}
+
+	zlog.Info().Str("version", Version).Msg("Starting strict-supplementalgroups-install")
 
 	// install binaries
 	fromDir := *binDir

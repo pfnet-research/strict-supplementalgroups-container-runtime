@@ -15,7 +15,12 @@ import (
 	ociruntime "github.com/pfnet-research/strict-supplementalgroups-container-runtime/pkg/oci/runtime"
 )
 
-var logFile *lumberjack.Logger
+var (
+	// injected in build time
+	Version = ""
+
+	logFile *lumberjack.Logger
+)
 
 func closeLogFile() {
 	if logFile != nil {
@@ -52,7 +57,7 @@ func main() {
 	}
 	zlog.Logger = zerolog.New(logOutput).With().Timestamp().Str("Execution", uuid.New().String()).Logger().Level(cfg.Logging.LogLevel)
 
-	zlog.Info().Msg("Execution Start")
+	zlog.Info().Str("version", Version).Msg("Execution Start")
 	zlog.Debug().Interface("config", cfg).Msg("Config loaded")
 
 	// run the container runtime

@@ -7,9 +7,9 @@ RUN go mod download
 COPY cmd/ cmd/
 COPY pkg/ pkg/
 COPY Makefile Makefile
-RUN make build
+RUN make build-only
 
 FROM ubuntu:22.04
 RUN mkdir -p /opt/strict-supplementalgroups-container-runtime/bin
-COPY --from=builder /app/bin /opt/strict-supplementalgroups-container-runtime/bin
+COPY --from=builder /app/dist /opt/strict-supplementalgroups-container-runtime/bin
 ENTRYPOINT [ "/opt/strict-supplementalgroups-container-runtime/bin/strict-supplementalgroups-install" ]
