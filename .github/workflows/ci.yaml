@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     tags-ignore: [ "**" ]
-    paths-ignore: [ "**.md" ]
+    paths-ignore: [ "**.md", ".github/workflows/release.yaml" ]
   pull_request:
     types: [opened, synchronize]
     paths-ignore: [ "**.md" ]
