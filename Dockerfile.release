@@ -1,0 +1,6 @@
+FROM gcr.io/distroless/static-debian11:latest
+COPY strict-supplementalgroups-container-runtime \
+    /opt/strict-supplementalgroups-container-runtime/bin/
+COPY strict-supplementalgroups-install \
+    /opt/strict-supplementalgroups-container-runtime/bin/
+ENTRYPOINT ["/opt/strict-supplementalgroups-container-runtime/bin/strict-supplementalgroups-install"]

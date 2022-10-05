@@ -86,3 +86,17 @@ ci-setup:
 	curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.16.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && sudo mv ./kustomize /usr/local/bin
 	curl -LO "https://storage.googleapis.com/kubernetes-release/release/$$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" && chmod +x ./kubectl && sudo mv kubectl /usr/local/bin
+
+#
+# Release
+#
+.PHONY: release
+release: guard-RELEASE guard-RELEASE_TAG
+	git diff --quiet HEAD || (echo "your current branch is dirty" && exit 1)
+	git tag $(RELEASE_TAG) $(REVISION)
+	git push origin $(RELEASE_TAG)
+guard-%:
+	@ if [ "${${*}}" = "" ]; then \
+		echo "Environment variable $* is not set"; \
+		exit 1; \
+	fi

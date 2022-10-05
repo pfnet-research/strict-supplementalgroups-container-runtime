@@ -210,6 +210,14 @@ make e2e
 # make e2e-clean
 ```
 
+## Release
+
+This tag the commit and push to origin.  Release pipeline will be run in Github Actions.
+
+```shell
+make RELEASE=true RELEASE_TAG=vX.Y.Z
+```
+
 ## License
 
 ```
