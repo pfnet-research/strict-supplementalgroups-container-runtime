@@ -215,7 +215,7 @@ make e2e
 This tag the commit and push to origin.  Release pipeline will be run in Github Actions.
 
 ```shell
-make RELEASE=true RELEASE_TAG=vX.Y.Z
+make release RELEASE=true RELEASE_TAG=vX.Y.Z
 ```
 
 ## License
